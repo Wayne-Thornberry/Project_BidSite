@@ -1,0 +1,19 @@
+<div>
+    <nav>
+        <ul>
+            <li><a href="{{ url("app_homepage") }}">Home</a></li>
+            <li><a href="{{ url("book_index") }}">Books</a></li>
+
+            {% if not is_granted('ROLE_USER') %}
+                <li><a href="{{ url("app_login") }}">Login</a></li>
+                <li><a href="{{ url("app_register") }}">Register</a></li>
+            {% else %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ url("app_admin") }}">Admin Panel</a></li>
+                {% endif %}
+                <li><a href="{{ url("app_profile") }}">Account</a></li>
+                <li><a href="{{ url("app_logout") }}">Logout</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
