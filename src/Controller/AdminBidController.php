@@ -55,7 +55,7 @@ class AdminBidController extends AbstractController
      */
     public function show(Bid $bid): Response
     {
-        return $this->render('admin/bid/show.html.twig', [
+        return $this->render('admin/bid/index.html.twig', [
             'bid' => $bid,
         ]);
     }

@@ -11,6 +11,7 @@ use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -35,6 +36,7 @@ class BookController extends AbstractController
 
     /**
      * @Route("/new", name="book_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request): Response
     {
@@ -95,7 +97,7 @@ class BookController extends AbstractController
             return $this->redirectToRoute('book_show', ["id" => $book->getId()]);
         }
 
-        return $this->render('book/show.html.twig', [
+        return $this->render('book/index.html.twig', [
             'book' => $book,
             'bid' => $bid,
             'bids' => $bidRepository->findBy(array('BookId' => $book->getId()), array('Price' => 'DESC')),
@@ -105,6 +107,7 @@ class BookController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="book_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Book $book): Response
     {
@@ -131,6 +134,7 @@ class BookController extends AbstractController
 
     /**
      * @Route("/{id}", name="book_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, Book $book): Response
     {

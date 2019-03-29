@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\AdminUserType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,7 +34,7 @@ class AdminUserController extends AbstractController
     public function new(Request $request): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(AdminUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -55,7 +56,7 @@ class AdminUserController extends AbstractController
      */
     public function show(User $user): Response
     {
-        return $this->render('admin/user/show.html.twig', [
+        return $this->render('admin/user/index.html.twig', [
             'user' => $user,
         ]);
     }
@@ -65,7 +66,7 @@ class AdminUserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(AdminUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

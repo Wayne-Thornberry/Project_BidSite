@@ -55,7 +55,7 @@ class AdminBookController extends AbstractController
      */
     public function show(Book $book): Response
     {
-        return $this->render('admin/book/show.html.twig', [
+        return $this->render('admin/book/index.html.twig', [
             'book' => $book,
         ]);
     }

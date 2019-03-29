@@ -3,18 +3,31 @@
 {% block title %}Book index{% endblock %}
 
 {% block body %}
-        <h1>Books</h1>
 
-        {% for row in books|batch(4) %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Featured books
+
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('book_new') }}">Add new</a>
+        {% endif %}
+        </h4>
+    </div>
+    <div class="card-body">
+        {% for row in books|batch(3) %}
             <div class="row">
                 {% for book in books %}
                     <div class="card">
                         <img class="card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/416KGdCgQnL._SX331_BO1,204,203,200_.jpg" alt="Card image cap">
-                        <h3 class="card-header">{{ book.Name }} By {{ book.Author }}</h3>
+
+                        <div class="card-header">
+                            {{ book.Name }}
+                            <h6 class="card-subtitle mb-2 text-muted">By <a href="#">{{ book.Author }}</a></h6>
+                        </div>
                         <div class="card-body">
                             <p class="card-text">
+                                Current Bid: €{{ book.Price }}
                             <hr>
-                            Current Bid: €{{ book.Price }}
                             </p>
                             <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-primary">View Book</a>
                         </div>
@@ -27,8 +40,6 @@
                 {% endfor %}
             </div>
         {% endfor %}
-
-    {% if is_granted('ROLE_USER') %}
-    <a href="{{ path('book_new') }}">Create new</a>
-    {% endif %}
+    </div>
+</div>
 {% endblock %}
