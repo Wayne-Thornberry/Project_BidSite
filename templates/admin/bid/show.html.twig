@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bid{% endblock %}
+
+{% block body %}
+    <h1>Bid</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ bid.id }}</td>
+            </tr>
+            <tr>
+                <th>BookId</th>
+                <td>{{ bid.BookId }}</td>
+            </tr>
+            <tr>
+                <th>UserId</th>
+                <td>{{ bid.UserId }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ bid.Price }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_bid_index') }}">back to list</a>
+
+    <a href="{{ path('admin_bid_edit', {'id': bid.id}) }}">edit</a>
+
+    {{ include('admin/bid/_delete_form.html.twig') }}
+{% endblock %}

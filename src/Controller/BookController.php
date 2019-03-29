@@ -21,10 +21,15 @@ class BookController extends AbstractController
     /**
      * @Route("/", name="book_index", methods={"GET"})
      */
-    public function index(BookRepository $bookRepository): Response
+    public function index(Request $request, BookRepository $bookRepository): Response
     {
+        $bid = new Bid();
+        $form = $this->createForm(BidType::class, $bid);
+        $form->handleRequest($request);
+
         return $this->render('book/index.html.twig', [
             'books' => $bookRepository->findAll(),
+            'form' => $form->createView(),
         ]);
     }
 
@@ -41,8 +46,17 @@ class BookController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($book);
+            $entityManager->flush();
+
+            $bid = new Bid();
+            $bid->setUserId($user->getId());
+            $bid->setBookId($book->getId());
+            $bid->setPrice($book->getPrice());
+
+            $entityManager->persist($bid);
             $entityManager->flush();
 
             return $this->redirectToRoute('book_index');
@@ -61,23 +75,30 @@ class BookController extends AbstractController
     {
         $bid = new Bid();
         $user = $this->getUser();
-        $bid->setUserId($user->getId());
-        $bid->setBookId($book->getId());
         $form = $this->createForm(BidType::class, $bid);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($bid);
-            $entityManager->flush();
+            if($bid->getPrice() > $book->getPrice()) {
+                $bid->setUserId($user->getId());
+                $bid->setBookId($book->getId());
 
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($bid);
+                $entityManager->flush();
+
+                if ($bid->getPrice() > $book->getPrice()) {
+                    $book->setPrice($bid->getPrice());
+                    $this->getDoctrine()->getManager()->flush();
+                }
+            }
             return $this->redirectToRoute('book_show', ["id" => $book->getId()]);
         }
 
         return $this->render('book/show.html.twig', [
             'book' => $book,
             'bid' => $bid,
-            'bids' => $bidRepository->findBy(array('BookId' => $book->getId())),
+            'bids' => $bidRepository->findBy(array('BookId' => $book->getId()), array('Price' => 'DESC')),
             'form' => $form->createView(),
         ]);
     }

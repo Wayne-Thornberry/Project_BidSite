@@ -13,21 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="app_homepage", methods={"GET"})
+     * @Route("/", name="app_index", methods={"GET"})
      */
     public function index(BookRepository $bookRepository): Response
-    {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
-            'books' => $bookRepository->findAll(),
-        ]);
-    }
-
-
-    /**
-     * @Route("/book", name="book_view", methods={"GET"})
-     */
-    public function bookAction(BookRepository $bookRepository): Response
     {
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',

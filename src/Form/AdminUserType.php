@@ -2,24 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Bid;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BidType extends AbstractType
+class AdminUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('Price',null, array('label' => false))
+            ->add('username')
+            ->add('roles')
+            ->add('password')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Bid::class,
+            'data_class' => User::class,
         ]);
     }
 }

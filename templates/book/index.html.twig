@@ -3,39 +3,32 @@
 {% block title %}Book index{% endblock %}
 
 {% block body %}
-    <h1>Book index</h1>
+        <h1>Books</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>SubmitterName</th>
-                <th>SubmitterId</th>
-                <th>Author</th>
-                <th>Price</th>
-                <th>ISPN</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <td>{{ book.id }}</td>
-                <td><a href="{{ path('book_show', {'id': book.id}) }}">{{ book.Name }}</a></td>
-                <td>{{ book.SubmitterName }}</td>
-                <td>{{ book.SubmitterId }}</td>
-                <td>{{ book.Author }}</td>
-                <td>{{ book.Price }}</td>
-                <td>{{ book.ISPN }}</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
+        {% for row in books|batch(4) %}
+            <div class="row">
+                {% for book in books %}
+                    <div class="card">
+                        <img class="card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/416KGdCgQnL._SX331_BO1,204,203,200_.jpg" alt="Card image cap">
+                        <h3 class="card-header">{{ book.Name }} By {{ book.Author }}</h3>
+                        <div class="card-body">
+                            <p class="card-text">
+                            <hr>
+                            Current Bid: €{{ book.Price }}
+                            </p>
+                            <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-primary">View Book</a>
+                        </div>
+                        <div class="card-footer">
+                            Submitted By: <a href="{{ path('user_show', {'id': book.SubmitterId}) }}">{{ book.SubmitterName }}</a>
+                        </div>
+                    </div>
+                {% else %}
+                    no records found
+                {% endfor %}
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
 
+    {% if is_granted('ROLE_USER') %}
     <a href="{{ path('book_new') }}">Create new</a>
+    {% endif %}
 {% endblock %}

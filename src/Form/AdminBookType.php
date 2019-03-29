@@ -2,24 +2,29 @@
 
 namespace App\Form;
 
-use App\Entity\Bid;
+use App\Entity\Book;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BidType extends AbstractType
+class AdminBookType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('Price',null, array('label' => false))
+            ->add('Name')
+            ->add('SubmitterName')
+            ->add('SubmitterId')
+            ->add('Author')
+            ->add('Price')
+            ->add('ISPN')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Bid::class,
+            'data_class' => Book::class,
         ]);
     }
 }

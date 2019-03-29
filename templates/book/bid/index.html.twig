@@ -1,23 +1,18 @@
 {% block body %}
-    <h1>Bids on this item</h1>
+    <h1>Bids</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>BookId</th>
                 <th>UserId</th>
                 <th>Price</th>
-                <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for bid in bids %}
             <tr>
-                <td>{{ bid.id }}</td>
-                <td>{{ bid.BookId }}</td>
-                <td>{{ bid.UserId }}</td>
-                <td>{{ bid.Price }}</td>
+                <td><a href="{{ path('user_show',{'id':bid.UserId}) }}">{{ bid.UserId }}</td>
+                <td>€{{ bid.Price }}</td>
             </tr>
         {% else %}
             <tr>
