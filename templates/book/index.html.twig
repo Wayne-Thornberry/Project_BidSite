@@ -1,45 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book index{% endblock %}
+{% block title %}Books{% endblock %}
 
 {% block body %}
-
-<div class="card">
-    <div class="card-header">
-        <h4 class="card-title">Featured books
-
-        {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('book_new') }}">Add new</a>
-        {% endif %}
-        </h4>
-    </div>
-    <div class="card-body">
-        {% for row in books|batch(3) %}
-            <div class="row">
-                {% for book in books %}
-                    <div class="card">
-                        <img class="card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/416KGdCgQnL._SX331_BO1,204,203,200_.jpg" alt="Card image cap">
-
-                        <div class="card-header">
-                            {{ book.Name }}
-                            <h6 class="card-subtitle mb-2 text-muted">By <a href="#">{{ book.Author }}</a></h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">
-                                Current Bid: €{{ book.Price }}
-                            <hr>
-                            </p>
-                            <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-primary">View Book</a>
-                        </div>
-                        <div class="card-footer">
-                            Submitted By: <a href="{{ path('user_show', {'id': book.SubmitterId}) }}">{{ book.SubmitterName }}</a>
-                        </div>
-                    </div>
-                {% else %}
-                    no records found
-                {% endfor %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Featured books</h5>
+        </div>
+        <div class="card-body">
+            {% for batch in books|batch(3) %}
+            <div class="card-deck">
+                    {% for book in batch %}
+                        {% include 'book/book-card.html.twig' %}
+                    {% endfor %}
             </div>
-        {% endfor %}
+            {% else %}
+                No books found...
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            {% if is_granted('ROLE_USER') %}
+                <form action="{{ path('book_new')}}">
+                    <button type="submit" class="btn btn-success" value="New Book">+</button>
+                </form>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}

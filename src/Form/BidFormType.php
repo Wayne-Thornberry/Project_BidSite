@@ -4,15 +4,21 @@ namespace App\Form;
 
 use App\Entity\Bid;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BidType extends AbstractType
+class BidFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('Price',null, array('label' => false))
+            ->add('Price',NumberType::class, array(
+                'label' => 'Enter a bid amount',
+                'attr' =>[
+                    'class' => 'form-control'
+                ]
+            ))
         ;
     }
 

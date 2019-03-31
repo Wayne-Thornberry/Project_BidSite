@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Bid;
-use App\Form\AdminBidType;
+use App\Form\AdminBidFormType;
 use App\Repository\BidRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,7 @@ class AdminBidController extends AbstractController
     public function new(Request $request): Response
     {
         $bid = new Bid();
-        $form = $this->createForm(AdminBidType::class, $bid);
+        $form = $this->createForm(AdminBidFormType::class, $bid);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -65,7 +65,7 @@ class AdminBidController extends AbstractController
      */
     public function edit(Request $request, Bid $bid): Response
     {
-        $form = $this->createForm(AdminBidType::class, $bid);
+        $form = $this->createForm(AdminBidFormType::class, $bid);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

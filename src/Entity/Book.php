@@ -21,12 +21,6 @@ class Book
      */
     private $Name;
 
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $SubmitterName;
-
     /**
      * @ORM\Column(type="integer")
      */

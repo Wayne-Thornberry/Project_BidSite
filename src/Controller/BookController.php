@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Bid;
 use App\Entity\Book;
-use App\Form\BidType;
-use App\Form\BookType;
+use App\Entity\Comment;
+use App\Form\BidFormType;
+use App\Form\BookFormType;
+use App\Form\CommentFormType;
 use App\Repository\BidRepository;
 use App\Repository\BookRepository;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +28,7 @@ class BookController extends AbstractController
     public function index(Request $request, BookRepository $bookRepository): Response
     {
         $bid = new Bid();
-        $form = $this->createForm(BidType::class, $bid);
+        $form = $this->createForm(BidFormType::class, $bid);
         $form->handleRequest($request);
 
         return $this->render('book/index.html.twig', [
@@ -40,12 +43,14 @@ class BookController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $book = new Book();
         $user = $this->getUser();
+
+        $book = new Book();
         $book->setSubmitterName($user->getUsername());
         $book->setSubmitterId($user->getId());
-        $form = $this->createForm(BookType::class, $book);
+        $form = $this->createForm(BookFormType::class, $book);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -73,14 +78,20 @@ class BookController extends AbstractController
     /**
      * @Route("/{id}", name="book_show", methods={"GET","POST"})
      */
-    public function show(Request $request, BidRepository $bidRepository, Book $book): Response
+    public function show(Request $request, CommentRepository $commentRepository, BidRepository $bidRepository, Book $book): Response
     {
-        $bid = new Bid();
         $user = $this->getUser();
-        $form = $this->createForm(BidType::class, $bid);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $bid = new Bid();
+        $bidForm = $this->createForm(BidFormType::class, $bid);
+        $bidForm->handleRequest($request);
+
+
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentFormType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        if ($bidForm->isSubmitted() && $bidForm->isValid()) {
             if($bid->getPrice() > $book->getPrice()) {
                 $bid->setUserId($user->getId());
                 $bid->setBookId($book->getId());
@@ -89,19 +100,29 @@ class BookController extends AbstractController
                 $entityManager->persist($bid);
                 $entityManager->flush();
 
-                if ($bid->getPrice() > $book->getPrice()) {
-                    $book->setPrice($bid->getPrice());
-                    $this->getDoctrine()->getManager()->flush();
-                }
+                $book->setPrice($bid->getPrice());
+                $this->getDoctrine()->getManager()->flush();
             }
             return $this->redirectToRoute('book_show', ["id" => $book->getId()]);
         }
 
-        return $this->render('book/index.html.twig', [
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setUserId($user->getId());
+            $comment->setBookId($book->getId());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('book_show', ["id" => $book->getId()]);
+        }
+
+        return $this->render('book/show.html.twig', [
             'book' => $book,
-            'bid' => $bid,
+            'comments' => $commentRepository->findBy(array('BookId' => $book->getId())),
             'bids' => $bidRepository->findBy(array('BookId' => $book->getId()), array('Price' => 'DESC')),
-            'form' => $form->createView(),
+            'bidform' => $bidForm->createView(),
+            'commentform' => $commentForm->createView(),
         ]);
     }
 
@@ -112,8 +133,8 @@ class BookController extends AbstractController
     public function edit(Request $request, Book $book): Response
     {
         $user = $this->getUser();
-        if($user->getId() != $book->getSubmitterId()) return $this->redirectToRoute("book_index");
-        $form = $this->createForm(BookType::class, $book);
+        if($user->getId() != $book->getSubmitterId() && !$this->isGranted('ROLE_ADMIN')) return $this->redirectToRoute("book_index");
+        $form = $this->createForm(BookFormType::class, $book);
         $book->setSubmitterName($user->getUsername());
         $book->setSubmitterId($user->getId());
         $form->handleRequest($request);

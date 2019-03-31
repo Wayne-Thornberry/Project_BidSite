@@ -3,11 +3,29 @@
 {% block title %}Edit Book{% endblock %}
 
 {% block body %}
-    <h1>Edit Book</h1>
 
-    {{ include('book/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('book_index') }}">back to list</a>
-
-    {{ include('book/_delete_form.html.twig') }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    {{ form_start(form) }}
+                    <img src="https://images-na.ssl-images-amazon.com/images/I/416KGdCgQnL._SX331_BO1,204,203,200_.jpg" class="card-img-top" alt="Responsive image">
+                    <h3 class="card-header">{{ form_row(form.Name) }}By{{ form_row(form.Author)  }}</h3>
+                    <div class="card-body">
+                        {{ form_row(form.ISPN) }}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary">Update</button>
+                    </div>
+                    {{ form_end(form) }}
+                    <div class="card-footer">
+                        {{ include('book/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                Bids go here to delete
+            </div>
+        </div>
+    </div>
 {% endblock %}
