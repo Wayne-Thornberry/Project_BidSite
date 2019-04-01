@@ -23,6 +23,11 @@ class Book
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\OneToOne(
+     *     targetEntity="app\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\Column(type="integer")
      */
     private $SubmitterId;
 

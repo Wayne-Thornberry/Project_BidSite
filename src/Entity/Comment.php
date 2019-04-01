@@ -18,10 +18,20 @@ class Comment
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\OneToOne(
+     *     targetEntity="app\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\Column(type="integer")
      */
     private $UserId;
 
     /**
+     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(
+     *     targetEntity="app\Entity\Book"
+     * )
+     * @ORM\JoinColumn(name="book_id", referencedColumnName="id")
      * @ORM\Column(type="integer")
      */
     private $BookId;

@@ -17,7 +17,7 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, array(
-                'mapped' => false,
+                'mapped' => true,
                 'required' => true,
                 'attr' =>[
                     'class' => 'form-control',

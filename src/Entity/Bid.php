@@ -17,17 +17,26 @@ class Bid
     private $id;
 
     /**
+     * @ORM\OneToOne(
+     *     targetEntity="app\Entity\Book"
+     * )
+     * @ORM\JoinColumn(name="book_id", referencedColumnName="id")
      * @ORM\Column(type="integer")
      */
     private $BookId;
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\OneToOne(
+     *     targetEntity="app\Entity\User",
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $UserId;
 
     /**
      * @ORM\Column(type="float")
+     *
      */
     private $Price;
 
