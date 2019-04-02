@@ -1,5 +1,7 @@
 {{ form_start(bidform) }}
-        {{ form_widget(bidform) }}
+    <div class="form-inline">
+    {{ form_row(bidform.Price, {'value': bids[0].price}) }}
+    </div>
     <hr>
     <button class="btn btn-primary">{{ button_label|default('Bid') }}</button>
 {{ form_end(bidform) }}
