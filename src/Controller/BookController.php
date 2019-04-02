@@ -46,8 +46,7 @@ class BookController extends AbstractController
         $user = $this->getUser();
 
         $book = new Book();
-        $book->setSubmitterName($user->getUsername());
-        $book->setSubmitterId($user->getId());
+        $book->setUser($user);
         $form = $this->createForm(BookFormType::class, $book);
         $form->handleRequest($request);
 
@@ -59,8 +58,8 @@ class BookController extends AbstractController
             $entityManager->flush();
 
             $bid = new Bid();
-            $bid->setUserId($user->getId());
-            $bid->setBookId($book->getId());
+            $bid->setUser($user);
+            $bid->setBook($book);
             $bid->setPrice($book->getPrice());
 
             $entityManager->persist($bid);
@@ -93,8 +92,8 @@ class BookController extends AbstractController
 
         if ($bidForm->isSubmitted() && $bidForm->isValid()) {
             if($bid->getPrice() > $book->getPrice()) {
-                $bid->setUserId($user->getId());
-                $bid->setBookId($book->getId());
+                $bid->setUser($user);
+                $bid->setBook($book);
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($bid);
@@ -107,8 +106,8 @@ class BookController extends AbstractController
         }
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $comment->setUserId($user->getId());
-            $comment->setBookId($book->getId());
+            $comment->setUser($user);
+            $comment->setBook($book);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
@@ -119,8 +118,8 @@ class BookController extends AbstractController
 
         return $this->render('book/show.html.twig', [
             'book' => $book,
-            'comments' => $commentRepository->findBy(array('BookId' => $book->getId())),
-            'bids' => $bidRepository->findBy(array('BookId' => $book->getId()), array('Price' => 'DESC')),
+            'comments' => $commentRepository->findBy(array('Book' => $book)),
+            'bids' => $bidRepository->findBy(array('Book' => $book), array('Price' => 'DESC')),
             'bidform' => $bidForm->createView(),
             'commentform' => $commentForm->createView(),
         ]);
@@ -133,10 +132,9 @@ class BookController extends AbstractController
     public function edit(Request $request, Book $book): Response
     {
         $user = $this->getUser();
-        if($user->getId() != $book->getSubmitterId() && !$this->isGranted('ROLE_ADMIN')) return $this->redirectToRoute("book_index");
+        if($user != $book->getUser() && !$this->isGranted('ROLE_ADMIN')) return $this->redirectToRoute("book_index");
         $form = $this->createForm(BookFormType::class, $book);
-        $book->setSubmitterName($user->getUsername());
-        $book->setSubmitterId($user->getId());
+        $book->setUser($user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

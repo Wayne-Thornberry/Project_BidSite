@@ -16,7 +16,7 @@
                         <h4>Current Bid: €{{ bids[0].Price }}</h4>
                     </div>
                     <div class="card-body">
-                    Last Bidder: <a href="{{ path('user_show', {'id' : bids[0].userid}) }}">{{ bids[0].userid }}</a><br>
+                    Last Bidder: <a href="{{ path('user_show', {'id' : bids[0].user.id}) }}">{{ bids[0].user.username }}</a><br>
                     </div>
                     <div class="card-footer">
                         {{ include('book/bid/new.html.twig') }}
@@ -32,7 +32,7 @@
                 </div>
                 <div class="card-body">
                     {% if is_granted('ROLE_USER')  %}
-                        {% if app.user.id == book.SubmitterId %}
+                        {% if app.user.id == book.user.id %}
                             <div class="btn-group">
                                 <form action="{{ path('book_edit', {'id': book.id}) }}">
                                     <button type="submit" class="btn btn-primary" value="Go to Google">Edit</button>
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="card-footer">
-                    Submitted By: <a href="{{ path('user_show', {'id' : book.submitterid}) }}">{{ book.SubmitterId }}</a>
+                    Submitted By: <a href="{{ path('user_show', {'id' : book.user.id}) }}">{{ book.user.username }}</a>
                 </div>
             </div>
         </div>
@@ -60,12 +60,12 @@
             <div class="col">
                 {{ include('book/comment/index.html.twig') }}
                 {% if is_granted('ROLE_USER')  %}
-                {{ include('book/comment/new.html.twig') }}
+                    {{ include('book/comment/new.html.twig') }}
+                {% endif %}
             </div>
             <div class="col">
                 {{ include('book/bid/index.html.twig') }}
             </div>
-            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -35,6 +35,11 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $DateCreated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,5 +111,17 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->DateCreated;
+    }
+
+    public function setDateCreated(?\DateTimeInterface $DateCreated): self
+    {
+        $this->DateCreated = $DateCreated;
+
+        return $this;
     }
 }

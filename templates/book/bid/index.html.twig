@@ -15,7 +15,7 @@
                 <tbody>
                 {% for bid in bids %}
                     <tr>
-                        <td><a href="{{ path('user_show',{'id':bid.UserId}) }}">{{ bid.UserId }}</td>
+                        <td><a href="{{ path('user_show',{'id':bid.user.id}) }}">{{ bid.user.username }}</td>
                         <td>€{{ bid.Price }}</td>
                     </tr>
                 {% else %}

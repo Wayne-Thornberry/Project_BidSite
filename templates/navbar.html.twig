@@ -1,5 +1,5 @@
 <div>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
         <a class="navbar-brand" href="{{ url("app_index") }}">EB-Bid</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -13,9 +13,14 @@
                     <a class="nav-link" href="{{ url("book_index") }}">Books</a>
                 </li>
             </ul>
-        </div>
 
+        </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
             <ul class="navbar-nav ml-auto">
                 {% if not is_granted('ROLE_USER') %}
                     <li class="nav-item">

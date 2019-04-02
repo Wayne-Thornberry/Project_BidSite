@@ -8,7 +8,7 @@
                 {% for comment in comments %}
                     <div class="card">
                         <div class="card-header">
-                            <a href="{{ path('user_show', {'id' : comment.userId}) }}">{{ comment.userId }}</a> says
+                            <a href="{{ path('user_show', {'id' : comment.user.id}) }}">{{ comment.user.username }}</a> says
                         </div>
                         <div class="card-body">
                             <p>

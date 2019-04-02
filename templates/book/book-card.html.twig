@@ -13,7 +13,7 @@
         <div class="btn-group">
             <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-primary">View Book</a>
             {% if is_granted('ROLE_USER')  %}
-                {% if app.user.id == book.SubmitterId or is_granted('ROLE_ADMIN') %}
+                {% if app.user.id == book.user.id or is_granted('ROLE_ADMIN') %}
                     <form action="{{ path('book_edit', {'id': book.id}) }}">
                         <button type="submit" class="btn btn-secondary" value="Go to Google">Edit</button>
                     </form>
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="card-footer">
-        Submitted By: <a href="{{ path('user_show', {'id': book.SubmitterId}) }}">{{ book.SubmitterId }}</a>
+        Submitted By: <a href="{{ path('user_show', {'id': book.user.id}) }}">{{ book.user.username }}</a>
         <p><small class="text-muted">Posted 5 minutes ago</small></p>
     </div>
 </div>

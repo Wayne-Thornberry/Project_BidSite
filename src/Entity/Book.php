@@ -22,16 +22,6 @@ class Book
     private $Name;
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\OneToOne(
-     *     targetEntity="app\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * @ORM\Column(type="integer")
-     */
-    private $SubmitterId;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $Author;
@@ -45,6 +35,17 @@ class Book
      * @ORM\Column(type="string", length=255)
      */
     private $ISPN;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $User;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $DateUploaded;
 
     public function getId(): ?int
     {
@@ -75,30 +76,6 @@ class Book
         return $this;
     }
 
-    public function getSubmitterName(): ?string
-    {
-        return $this->SubmitterName;
-    }
-
-    public function setSubmitterName(string $SubmitterName): self
-    {
-        $this->SubmitterName = $SubmitterName;
-
-        return $this;
-    }
-
-    public function getSubmitterId(): ?int
-    {
-        return $this->SubmitterId;
-    }
-
-    public function setSubmitterId(int $SubmitterId): self
-    {
-        $this->SubmitterId = $SubmitterId;
-
-        return $this;
-    }
-
     public function getPrice(): ?int
     {
         return $this->Price;
@@ -119,6 +96,30 @@ class Book
     public function setISPN(string $ISPN): self
     {
         $this->ISPN = $ISPN;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
+
+        return $this;
+    }
+
+    public function getDateUploaded(): ?\DateTimeInterface
+    {
+        return $this->DateUploaded;
+    }
+
+    public function setDateUploaded(?\DateTimeInterface $DateUploaded): self
+    {
+        $this->DateUploaded = $DateUploaded;
 
         return $this;
     }

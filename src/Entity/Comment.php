@@ -17,57 +17,30 @@ class Comment
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\OneToOne(
-     *     targetEntity="app\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * @ORM\Column(type="integer")
-     */
-    private $UserId;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\OneToOne(
-     *     targetEntity="app\Entity\Book"
-     * )
-     * @ORM\JoinColumn(name="book_id", referencedColumnName="id")
-     * @ORM\Column(type="integer")
-     */
-    private $BookId;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $Text;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $User;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Book")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Book;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $DatePosted;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->UserId;
-    }
-
-    public function setUserId(int $UserId): self
-    {
-        $this->UserId = $UserId;
-
-        return $this;
-    }
-
-    public function getBookId(): ?int
-    {
-        return $this->BookId;
-    }
-
-    public function setBookId(int $BookId): self
-    {
-        $this->BookId = $BookId;
-
-        return $this;
     }
 
     public function getText(): ?string
@@ -78,6 +51,42 @@ class Comment
     public function setText(string $Text): self
     {
         $this->Text = $Text;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->Book;
+    }
+
+    public function setBook(?Book $Book): self
+    {
+        $this->Book = $Book;
+
+        return $this;
+    }
+
+    public function getDatePosted(): ?\DateTimeInterface
+    {
+        return $this->DatePosted;
+    }
+
+    public function setDatePosted(?\DateTimeInterface $DatePosted): self
+    {
+        $this->DatePosted = $DatePosted;
 
         return $this;
     }
