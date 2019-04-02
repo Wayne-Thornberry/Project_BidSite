@@ -4,6 +4,7 @@
 /.env.local.php
 /.env.*.local
 /public/bundles/
+/.idea
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -13,3 +14,12 @@
 ###< symfony/web-server-bundle ###
 .idea/workspace.xml
 .idea/Project_BidSite.iml
+.idea/Project_BidSite.iml
+.idea/workspace.xml
+.idea/dataSources.local.xml
+.idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2.xml
+.idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2/storage_v2/_src_/schema/exam2.80vHBQ.meta
+.idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2/storage_v2/_src_/schema/main.uQUzAA.meta
+.idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2/storage_v2/_src_/schema/site.R981AA.meta
+.idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2.xml
+.idea/dataSources.local.xml
