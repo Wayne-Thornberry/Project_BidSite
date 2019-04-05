@@ -14,8 +14,9 @@ class BookFormType extends AbstractType
         $builder
             ->add('Name')
             ->add('Author')
-            ->add('ISPN')
-            ->add('Price')
+            ->add('ISBN')
+            ->add('StartingBid')
+            ->add('Description')
         ;
     }
 

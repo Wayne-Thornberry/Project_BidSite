@@ -10,13 +10,19 @@
                     <tr>
                         <th>UserId</th>
                         <th>Price</th>
+                        {% if app.user.id == book.user.id %}
+                        <th>Action</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
-                {% for bid in bids %}
+                {% for bid in book.Bids %}
                     <tr>
                         <td><a href="{{ path('user_show',{'id':bid.user.id}) }}">{{ bid.user.username }}</td>
                         <td>€{{ bid.Price }}</td>
+                        {% if app.user.id == book.user.id %}
+                        <td>{{ include('book/bid/_delete_form.html.twig') }}</td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>

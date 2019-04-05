@@ -9,11 +9,11 @@
         </div>
         <div class="card-body">
             {% for batch in books|batch(3) %}
-            <div class="card-deck">
+                <div class="card-deck">
                     {% for book in batch %}
                         {% include 'book/book-card.html.twig' %}
                     {% endfor %}
-            </div>
+                </div>
             {% else %}
                 No books found...
             {% endfor %}

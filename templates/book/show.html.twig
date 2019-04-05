@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book{% endblock %}
+{% block title %}{{ book.Name }} By {{ book.Author }}{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -13,13 +13,20 @@
                 </div>
                 <div class="col">
                     <div class="card-header">
-                        <h4>Current Bid: €{{ bids[0].Price }}</h4>
+                        {% if book.IsOpen %}
+                        <h4><span class="badge badge-success">Open</span>Current Bid: €{{ book.Bids|first.price }}</h4>
+                        {% else %}
+                        <h4><span class="badge badge-danger">Closed</span>Current Bid: €{{ book.Bids|first.price }}</h4>
+                        {% endif %}
                     </div>
                     <div class="card-body">
-                    Last Bidder: <a href="{{ path('user_show', {'id' : bids[0].user.id}) }}">{{ bids[0].user.username }}</a><br>
+                    Last Bidder: <a href="{{ path('user_show', {'id' : book.Bids|last.user.id}) }}">{{ book.Bids|last.user.username }}</a><br>
+                    Date Bid: {{ book.Bids|last.DatePosted|date('Y/m/d g:s:a')}}<br>
                     </div>
                     <div class="card-footer">
+                        {% if book.IsOpen %}
                         {{ include('book/bid/new.html.twig') }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -41,15 +48,16 @@
                             </div>
                         {% endif %}
                     {% endif %}
+                    <h6>Author: {{ book.Author }}</h6>
+                    <h6>ISBN: {{ book.ISBN }}</h6>
                     <p>
-                        Author: {{ book.Author }}<br>
-                        ISPN: {{ book.ISPN }}<br>
+                        {{ book.Description }}
                     </p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
 
                 <div class="card-footer">
                     Submitted By: <a href="{{ path('user_show', {'id' : book.user.id}) }}">{{ book.user.username }}</a>
+                    <p class="card-text"><small class="text-muted">Submitted {{ book.DateSubmitted|date('Y/m/d') }}</small></p>
                 </div>
             </div>
         </div>

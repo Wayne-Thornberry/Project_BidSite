@@ -8,14 +8,13 @@ use App\Entity\Comment;
 use App\Form\BidFormType;
 use App\Form\BookFormType;
 use App\Form\CommentFormType;
-use App\Repository\BidRepository;
 use App\Repository\BookRepository;
-use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @Route("/book")
@@ -27,13 +26,8 @@ class BookController extends AbstractController
      */
     public function index(Request $request, BookRepository $bookRepository): Response
     {
-        $bid = new Bid();
-        $form = $this->createForm(BidFormType::class, $bid);
-        $form->handleRequest($request);
-
         return $this->render('book/index.html.twig', [
             'books' => $bookRepository->findAll(),
-            'form' => $form->createView(),
         ]);
     }
 
@@ -46,38 +40,45 @@ class BookController extends AbstractController
         $user = $this->getUser();
 
         $book = new Book();
-        $book->setUser($user);
-        $form = $this->createForm(BookFormType::class, $book);
-        $form->handleRequest($request);
+        $bid = new Bid();
 
+        $bookForm = $this->createForm(BookFormType::class, $book);
+        $bookForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $bidForm = $this->createForm(BidFormType::class, $bid);
+        $bidForm->handleRequest($request);
+
+        if ($bookForm->isSubmitted() && $bookForm->isValid()) {
+
+            $book->setUser($user);
+            $book->setDateSubmitted(new \DateTime());
+            $book->setIsOpen(true);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($book);
             $entityManager->flush();
 
-            $bid = new Bid();
             $bid->setUser($user);
             $bid->setBook($book);
-            $bid->setPrice($book->getPrice());
+            $bid->setPrice($book->getStartingBid());
 
             $entityManager->persist($bid);
             $entityManager->flush();
 
-            return $this->redirectToRoute('book_index');
+            return $this->redirectToRoute('book_show', ["id" => $book->getId()]);
         }
 
         return $this->render('book/new.html.twig', [
             'book' => $book,
-            'form' => $form->createView(),
+            'bookform' => $bookForm->createView(),
+            'bidform' => $bidForm->createView(),
         ]);
     }
 
     /**
      * @Route("/{id}", name="book_show", methods={"GET","POST"})
      */
-    public function show(Request $request, CommentRepository $commentRepository, BidRepository $bidRepository, Book $book): Response
+    public function show(Request $request, Book $book): Response
     {
         $user = $this->getUser();
 
@@ -85,21 +86,20 @@ class BookController extends AbstractController
         $bidForm = $this->createForm(BidFormType::class, $bid);
         $bidForm->handleRequest($request);
 
-
         $comment = new Comment();
         $commentForm = $this->createForm(CommentFormType::class, $comment);
         $commentForm->handleRequest($request);
 
         if ($bidForm->isSubmitted() && $bidForm->isValid()) {
-            if($bid->getPrice() > $book->getPrice()) {
+            if($bid->getPrice() > $book->getBids()->last()->getPrice()) {
                 $bid->setUser($user);
                 $bid->setBook($book);
+                $bid->setDatePosted(new \DateTime());
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($bid);
                 $entityManager->flush();
 
-                $book->setPrice($bid->getPrice());
                 $this->getDoctrine()->getManager()->flush();
             }
             return $this->redirectToRoute('book_show', ["id" => $book->getId()]);
@@ -108,6 +108,7 @@ class BookController extends AbstractController
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $comment->setUser($user);
             $comment->setBook($book);
+            $comment->setDatePosted(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
@@ -118,8 +119,6 @@ class BookController extends AbstractController
 
         return $this->render('book/show.html.twig', [
             'book' => $book,
-            'comments' => $commentRepository->findBy(array('Book' => $book)),
-            'bids' => $bidRepository->findBy(array('Book' => $book), array('Price' => 'DESC')),
             'bidform' => $bidForm->createView(),
             'commentform' => $commentForm->createView(),
         ]);
@@ -133,11 +132,11 @@ class BookController extends AbstractController
     {
         $user = $this->getUser();
         if($user != $book->getUser() && !$this->isGranted('ROLE_ADMIN')) return $this->redirectToRoute("book_index");
-        $form = $this->createForm(BookFormType::class, $book);
+        $bookForm = $this->createForm(BookFormType::class, $book);
         $book->setUser($user);
-        $form->handleRequest($request);
+        $bookForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($bookForm->isSubmitted() && $bookForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('book_index', [
@@ -147,7 +146,7 @@ class BookController extends AbstractController
 
         return $this->render('book/edit.html.twig', [
             'book' => $book,
-            'form' => $form->createView(),
+            'bookform' => $bookForm->createView(),
         ]);
     }
 
@@ -164,5 +163,33 @@ class BookController extends AbstractController
         }
 
         return $this->redirectToRoute('book_index');
+    }
+
+    /**
+     * @Route("/{bookid}/edit/comment/delete/{id}", name="book_comment_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function deleteComment(Request $request, Comment $comment): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($comment);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('book_edit', ["id"=>$request->get('bookid')]);
+    }
+
+    /**
+     * @Route("/{bookid}/edit/bid/delete/{id}", name="book_bid_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function deleteBid(Request $request, Bid $bid): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$bid->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($bid);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('book_edit', ["id"=>$request->get('bookid')]);
     }
 }

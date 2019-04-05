@@ -21,7 +21,7 @@ class Bid
      *     targetEntity="app\Entity\Book"
      * )
      * @ORM\JoinColumn(name="book_id", referencedColumnName="id")
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      */
     private $Price;
 
@@ -32,15 +32,15 @@ class Bid
     private $User;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Book")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Book;
-
-    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $DatePosted;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Book", inversedBy="HighestBid")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Book;
 
     public function getId(): ?int
     {
@@ -71,18 +71,6 @@ class Bid
         return $this;
     }
 
-    public function getBook(): ?Book
-    {
-        return $this->Book;
-    }
-
-    public function setBook(Book $Book): self
-    {
-        $this->Book = $Book;
-
-        return $this;
-    }
-
     public function getDatePosted(): ?\DateTimeInterface
     {
         return $this->DatePosted;
@@ -91,6 +79,18 @@ class Bid
     public function setDatePosted(?\DateTimeInterface $DatePosted): self
     {
         $this->DatePosted = $DatePosted;
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->Book;
+    }
+
+    public function setBook(?Book $Book): self
+    {
+        $this->Book = $Book;
 
         return $this;
     }

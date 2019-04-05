@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookRepository")
@@ -27,14 +30,9 @@ class Book
     private $Author;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $Price;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
-    private $ISPN;
+    private $ISBN;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -45,7 +43,39 @@ class Book
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $DateUploaded;
+    private $DateSubmitted;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Bid", mappedBy="Book")
+     * @OrderBy({"Price" = "DESC"})
+     */
+    private $Bids;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="Book", orphanRemoval=true)
+     */
+    private $Comments;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $StartingBid;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $Description;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $IsOpen;
+
+    public function __construct()
+    {
+        $this->Bids = new ArrayCollection();
+        $this->Comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,26 +106,14 @@ class Book
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getISBN(): ?string
     {
-        return $this->Price;
+        return $this->ISBN;
     }
 
-    public function setPrice(int $Price): self
+    public function setISBN(string $ISBN): self
     {
-        $this->Price = $Price;
-
-        return $this;
-    }
-
-    public function getISPN(): ?string
-    {
-        return $this->ISPN;
-    }
-
-    public function setISPN(string $ISPN): self
-    {
-        $this->ISPN = $ISPN;
+        $this->ISBN = $ISBN;
 
         return $this;
     }
@@ -112,14 +130,112 @@ class Book
         return $this;
     }
 
-    public function getDateUploaded(): ?\DateTimeInterface
+    public function getDateSubmitted(): ?\DateTimeInterface
     {
-        return $this->DateUploaded;
+        return $this->DateSubmitted;
     }
 
-    public function setDateUploaded(?\DateTimeInterface $DateUploaded): self
+    public function setDateSubmitted(?\DateTimeInterface $DateSubmitted): self
     {
-        $this->DateUploaded = $DateUploaded;
+        $this->DateSubmitted = $DateSubmitted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Bid[]
+     */
+    public function getBids(): Collection
+    {
+        return $this->Bids;
+    }
+
+    public function addHighestBid(Bid $highestBid): self
+    {
+        if (!$this->Bids->contains($highestBid)) {
+            $this->Bids[] = $highestBid;
+            $highestBid->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHighestBid(Bid $highestBid): self
+    {
+        if ($this->Bids->contains($highestBid)) {
+            $this->Bids->removeElement($highestBid);
+            // set the owning side to null (unless already changed)
+            if ($highestBid->getBook() === $this) {
+                $highestBid->setBook(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->Comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->Comments->contains($comment)) {
+            $this->Comments[] = $comment;
+            $comment->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->Comments->contains($comment)) {
+            $this->Comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getBook() === $this) {
+                $comment->setBook(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStartingBid(): ?float
+    {
+        return $this->StartingBid;
+    }
+
+    public function setStartingBid(float $StartingBid): self
+    {
+        $this->StartingBid = $StartingBid;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(string $Description): self
+    {
+        $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getIsOpen(): ?bool
+    {
+        return $this->IsOpen;
+    }
+
+    public function setIsOpen(bool $IsOpen): self
+    {
+        $this->IsOpen = $IsOpen;
 
         return $this;
     }

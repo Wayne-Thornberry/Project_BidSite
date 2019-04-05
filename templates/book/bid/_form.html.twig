@@ -1,6 +1,10 @@
 {{ form_start(bidform) }}
     <div class="form-inline">
-    {{ form_row(bidform.Price, {'value': bids[0].price}) }}
+        {% if book.Bids is empty %}
+        {{ form_row(bidform.Price, {'value': 0}) }}
+        {% else %}
+        {{ form_row(bidform.Price, {'value': book.Bids|first.price}) }}
+        {% endif %}
     </div>
     <hr>
     <button class="btn btn-primary">{{ button_label|default('Bid') }}</button>

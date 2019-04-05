@@ -1,13 +1,22 @@
-<div class="card">
+<div class="card mb-4" style="max-width: 337px" >
     <a href="{{ path('book_show', {'id':book.id}) }}"><img class="card-img-top" src="https://images-na.ssl-images-amazon.com/images/I/416KGdCgQnL._SX331_BO1,204,203,200_.jpg" alt="Card image cap"></a>
     <div class="card-header">
-        {{ book.Name }}
-        <h6 class="card-subtitle mb-2 text-muted">By <a href="#">{{ book.Author }}</a></h6>
+        <h5>{{ book.Name }}
+            {% if book.DateSubmitted|date("U") > "-2 days"|date("U") %}
+                <span class="badge badge-warning">New</span>
+            {% endif %}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">By <a href="{{path('user_show', {'id' : book.user.id})}}">{{ book.Author }}</a></h6>
     </div>
     <div class="card-body">
         <p class="card-text">
-            Current Bid: €{{ book.Price }}
-        <p><small class="text-muted">Last bid 3 minutes ago</small></p>
+            Status:
+            {% if book.IsOpen %}
+                <span class="badge badge-success">Open</span>
+            {% else %}
+                <span class="badge badge-danger">Closed</span>
+            {% endif %}
+            <br>Current Bid: €{{ book.Bids|first.price }}
+            <br>Date Bid: {{ book.Bids|last.DatePosted|date('Y/m/d g:s:a')}}
         <hr>
         </p>
         <div class="btn-group">
@@ -23,7 +32,7 @@
         </div>
     </div>
     <div class="card-footer">
-        Submitted By: <a href="{{ path('user_show', {'id': book.user.id}) }}">{{ book.user.username }}</a>
-        <p><small class="text-muted">Posted 5 minutes ago</small></p>
+        Submitted By: <a href="{{ path('user_show', {'id' : book.user.id}) }}">{{ book.user.username }}</a>
+        <p class="card-text"><small class="text-muted">Submitted {{ book.DateSubmitted|date('Y/m/d') }}</small></p>
     </div>
 </div>
