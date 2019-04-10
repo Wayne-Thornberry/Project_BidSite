@@ -23,7 +23,7 @@ class Comment
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $User;
 
@@ -33,8 +33,8 @@ class Comment
     private $DatePosted;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Book", inversedBy="Comments")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Book", inversedBy="Comments" )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $Book;
 

@@ -14,18 +14,32 @@
                 <div class="col">
                     <div class="card-header">
                         {% if book.IsOpen %}
-                        <h4><span class="badge badge-success">Open</span>Current Bid: €{{ book.Bids|first.price }}</h4>
+                            <h4><span class="badge badge-success">Open</span>Current Bid: €{{ book.Bids|first.price }}</h4>
                         {% else %}
-                        <h4><span class="badge badge-danger">Closed</span>Current Bid: €{{ book.Bids|first.price }}</h4>
+                            <h4><span class="badge badge-danger">Closed</span>Current Bid: €{{ book.Bids|first.price }}</h4>
                         {% endif %}
                     </div>
                     <div class="card-body">
-                    Last Bidder: <a href="{{ path('user_show', {'id' : book.Bids|last.user.id}) }}">{{ book.Bids|last.user.username }}</a><br>
-                    Date Bid: {{ book.Bids|last.DatePosted|date('Y/m/d g:s:a')}}<br>
+                        Last Bidder: <a href="{{ path('user_show', {'id' : book.Bids|last.user.id}) }}">{{ book.Bids|last.user.username }}</a><br>
+                        Date Bid: {{ book.Bids|last.DatePosted|date('Y/m/d g:sa')}}<br>
+
+                        {% if is_granted('ROLE_USER')  %}
+                            {% if app.user.id == book.user.id %}
+                                    <form action="{{ path('book_bid_toggle', {'id' : book.id}) }}" method="post">
+                                {% if book.IsOpen %}
+                                        <button class="btn btn-danger">Close Bidding</button>
+                                {% else %}
+                                    <button class="btn btn-success">Open Bidding</button>
+                                {% endif %}
+                                    </form>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     <div class="card-footer">
-                        {% if book.IsOpen %}
-                        {{ include('book/bid/new.html.twig') }}
+                        {% if is_granted('ROLE_USER')  %}
+                            {% if book.IsOpen %}
+                                {{ include('book/bid/new.html.twig') }}
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>

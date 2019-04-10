@@ -27,7 +27,7 @@ class Bid
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $User;
 
@@ -38,7 +38,7 @@ class Bid
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Book", inversedBy="HighestBid")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $Book;
 

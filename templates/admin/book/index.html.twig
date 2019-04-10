@@ -11,8 +11,8 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Author</th>
-                <th>Price</th>
-                <th>ISPN</th>
+                <th>Starting Bid</th>
+                <th>ISBN</th>
                 <th>Actions</th>
                 <th>Delete?</th>
             </tr>
@@ -23,8 +23,8 @@
                 <td>{{ book.id }}</td>
                 <td>{{ book.Name }}</td>
                 <td>{{ book.Author }}</td>
-                <td>€{{ book.Price }}</td>
-                <td>{{ book.ISPN }}</td>
+                <td>€{{ book.StartingBid }}</td>
+                <td>{{ book.ISBN }}</td>
                 <td>
                     <a href="{{ path('book_show', {'id': book.id}) }}">show</a>
                     <a href="{{ path('book_edit', {'id': book.id}) }}">edit</a>

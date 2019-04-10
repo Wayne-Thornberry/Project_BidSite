@@ -3,39 +3,45 @@
 {% block title %}Bid index{% endblock %}
 
 {% block body %}
-    <h1>Bid index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>BookId</th>
-                <th>UserId</th>
-                <th>Price</th>
-                <th>Actions</th>
-                <th>Delete?</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for bid in bids %}
-            <tr>
-                <td>{{ bid.id }}</td>
-                <td><a href="{{ path('book_show', {'id': bid.BookId}) }}">{{ bid.BookId }}</td>
-                <td><a href="{{ path('user_show', {'id': bid.UserId}) }}">{{ bid.UserId }}</td>
-                <td>{{ bid.Price }}</td>
-                <td>
-                    <a href="{{ path('admin_bid_show', {'id': bid.id}) }}">show</a>
-                    <a href="{{ path('admin_bid_edit', {'id': bid.id}) }}">edit</a>
-                </td>
-                <td>{{ include('admin/bid/_delete_form.html.twig') }}</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('admin_bid_new') }}">Create new</a>
+    <div class="card">
+        <div class="card-header">
+            <h3>Bid index</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Book</th>
+                    <th>User</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                    <th>Delete?</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for bid in bids %}
+                    <tr>
+                        <td>{{ bid.id }}</td>
+                        <td><a href="{{ path('book_show', {'id': bid.Book.id}) }}">[{{ bid.Book.id }}]{{ bid.Book.name }}</td>
+                        <td><a href="{{ path('user_show', {'id': bid.User.id}) }}">[{{ bid.User.id }}]{{ bid.User.username }}</td>
+                        <td>{{ bid.Price }}</td>
+                        <td>
+                            <a href="{{ path('book_show', {'id': bid.Book.id}) }}">show</a>
+                        </td>
+                        <td>{{ include('admin/bid/_delete_form.html.twig') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <a href="{{ path('admin_bid_new') }}">Create new</a>
+        </div>
+    </div>
 {% endblock %}
+

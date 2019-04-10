@@ -60,6 +60,7 @@ class BookController extends AbstractController
 
             $bid->setUser($user);
             $bid->setBook($book);
+            $bid->setDatePosted(new \DateTime());
             $bid->setPrice($book->getStartingBid());
 
             $entityManager->persist($bid);
@@ -163,6 +164,20 @@ class BookController extends AbstractController
         }
 
         return $this->redirectToRoute('book_index');
+    }
+
+
+    /**
+     * @Route("/{id}/toggle", name="book_bid_toggle", methods={"POST"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function bidToggle(Request $request, Book $book): Response
+    {
+        $user = $this->getUser();
+        if($user != $book->getUser() && !$this->isGranted('ROLE_ADMIN')) return $this->redirectToRoute("book_index");
+        $book->setIsOpen(!$book->getIsOpen());
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('book_show', ['id' => $book->getId()]);
     }
 
     /**

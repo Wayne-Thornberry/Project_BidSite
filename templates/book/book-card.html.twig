@@ -16,7 +16,7 @@
                 <span class="badge badge-danger">Closed</span>
             {% endif %}
             <br>Current Bid: €{{ book.Bids|first.price }}
-            <br>Date Bid: {{ book.Bids|last.DatePosted|date('Y/m/d g:s:a')}}
+            <br>Date Bid: {{ book.Bids|last.DatePosted|date('Y/m/d g:sa')}}
         <hr>
         </p>
         <div class="btn-group">
