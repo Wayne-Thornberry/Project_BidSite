@@ -1,35 +1,24 @@
-<!-- Footer -->
+
 <br>
 <footer class="page-footer font-small blue pt-4 bg-light">
-
-    <!-- Footer Links -->
     <div class="container-fluid text-center text-md-left">
-
-        <!-- Grid row -->
         <div class="row">
-
-            <!-- Grid column -->
             <div class="col-md-6 mt-md-0 mt-3">
-
-                <!-- Content -->
                 <h5 class="text-uppercase">Information</h5>
                 <p>Before submitting any books, please check out our terms and conditions and rules page.
                 every submission goes through verification before being shown on the front page</p>
-
             </div>
-            <!-- Grid column -->
 
             <hr class="clearfix w-100 d-md-none pb-3">
-
-            <!-- Grid column -->
             <div class="col-md-3 mb-md-0 mb-3">
-
-                <!-- Links -->
                 <h5 class="text-uppercase">Site Map</h5>
-
                 <ul class="list-unstyled">
                     <li>
-                        <a href="#!">Account</a>
+                        {% if is_granted('ROLE_USER')  %}
+                        <a href="{{ path("user_show", {'id': app.user.id}) }}">Account</a>
+                        {% else %}
+                        <a href="{{ path("app_login") }}">Account</a>
+                        {% endif %}
                     </li>
                     <li>
                         <a href="#!">Settings</a>
@@ -41,16 +30,11 @@
                         <a href="#!">Contact us</a>
                     </li>
                 </ul>
-
             </div>
-            <!-- Grid column -->
-
-            <!-- Grid column -->
             <div class="col-md-3 mb-md-0 mb-3">
-
                 <ul class="list-unstyled">
                     <li>
-                        <a href="#!">Books</a>
+                        <a href="{{ path("book_index") }}">Books</a>
                     </li>
                     <li>
                         <a href="#!">T&Cs</a>
@@ -58,19 +42,9 @@
                 </ul>
 
             </div>
-            <!-- Grid column -->
-
         </div>
-        <!-- Grid row -->
-
     </div>
-    <!-- Footer Links -->
-
-    <!-- Copyright -->
     <div class="footer-copyright text-center py-3">© 2018 Copyright:
         <a href="#">EB-Bid</a>
     </div>
-    <!-- Copyright -->
-
 </footer>
-<!-- Footer -->

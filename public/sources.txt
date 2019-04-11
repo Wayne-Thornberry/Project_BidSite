@@ -1,0 +1,10 @@
+[Images]
+
+bid icon = https://www.iconfinder.com/icons/229822/auction_bid_ecommerce_hammer_retail_shopping_icon
+comment icon = https://www.iconfinder.com/icons/132894/chat_comment_icon
+people icon = https://www.freepik.com/free-icons/people
+stock book image = https://www.pexels.com/photo/pile-of-books-159866/
+generic book image = https://images-na.ssl-images-amazon.com/images/I/416KGdCgQnL._SX331_BO1,204,203,200_.jpg
+
+[CSS]
+Bootstrap = https://getbootstrap.com/

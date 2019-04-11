@@ -23,3 +23,8 @@
 .idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2/storage_v2/_src_/schema/site.R981AA.meta
 .idea/dataSources/e1936b8a-fbd6-4592-94ad-9ec49f4313d2.xml
 .idea/dataSources.local.xml
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
